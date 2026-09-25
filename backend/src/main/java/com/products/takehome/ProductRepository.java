@@ -1,2 +1,13 @@
-// - `ProductRepository.java` — a `JpaRepository<Product, Long>` interface (Spring Data generates
-//   the implementation; you get `findAll()`/`save()` for free).
+package com.products.takehome;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface ProductRepository extends JpaRepository<Product, UUID> {
+    List<Product> findAll();
+
+    
+}
+
