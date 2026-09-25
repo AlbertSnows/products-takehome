@@ -1,0 +1,28 @@
+services: 
+  db: 
+    image: postgres:16 # 16 is a stable version
+    # auto restarts if it crashes or if the daemon restarts (e.g. machine reboot)
+    # stops when running `docker compose stop`
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: products
+      POSTGRES_PASSWORD: products # todo bonus: encrypt
+      POSTGRES_DB: products
+    ports:
+      - "5432:5432"
+    volumes:
+      # citation: https://hub.docker.com/_/postgres
+      # /var/lib/postgresql/data maps to Postgres's data directory in the container
+      - pgdata:/var/lib/postgresql/data
+      # bind mount. maps the init into the container. 
+      # postgres images auto run any sh file under /docker-entrypoint-initdb.d/ 
+      # only runs on the first init of a data directory
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+# citation: https://docs.docker.com/engine/storage/volumes/
+# Without volumes, Postgres writes its data files inside the container's own larger filesystem layer. 
+# Without it, we lose the db when we bring down the container. 
+# With this, it keeps the db between sessions. 
+# If we want to remove the volume, we can do `docker compose down -v`
+volumes:
+  pgdata:
