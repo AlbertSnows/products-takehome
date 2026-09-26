@@ -1,12 +1,14 @@
-import { useState } from 'react'
-import './App.css'
+// import { useState } from 'react'
+// import './App.css'
+import ProductList from './ProductList.jsx'
+import ProductForm from './ProductForm.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-    <p>Hello world!</p>
+    <ProductList />
+    <ProductForm />
 
     </>
   )
