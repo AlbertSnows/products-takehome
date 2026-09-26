@@ -17,7 +17,10 @@ services:
       # bind mount. maps the init into the container. 
       # postgres images auto run any sh file under /docker-entrypoint-initdb.d/ 
       # only runs on the first init of a data directory
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # :z relates to SELinux
+      # it sets the tags on the file such that it can be read in the container if SELinux is 
+      # blocking it
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:z
 
 # citation: https://docs.docker.com/engine/storage/volumes/
 # Without volumes, Postgres writes its data files inside the container's own larger filesystem layer. 
