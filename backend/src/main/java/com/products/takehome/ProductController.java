@@ -16,7 +16,16 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins="http://localhost:5173")
+// Why Cross Origin? 
+// An origin is a schem, host, and port together. Our page is
+// set up at http:localhost:5173, our api is set up at 
+// http:localhost:8080. Because the ports differ, the sources
+// our systems exist on different origins. Browsers typically
+// restrict cross-origin requests that scripts start. CORS
+// is a header mechanism that lets a server communicate which
+// other orgins may read its responses. In other words, this
+// annotation gives the FE "permission" to read our response.
+@CrossOrigin(origins={"http://localhost:5173", "http://localhost:3000"})
 public class ProductController {
     private final ProductRepository repository;
 

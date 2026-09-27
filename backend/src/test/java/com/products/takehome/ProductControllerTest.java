@@ -25,9 +25,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
+    // fake http client
+    // sends requests to our controller (defined above)
     @Autowired
     private MockMvc mockMvc;
 
+    // provides a fake repo for our tests
     @MockitoBean
     private ProductRepository repository;
 
@@ -39,6 +42,7 @@ class ProductControllerTest {
         
         mockMvc.perform(get("/products"))
             .andExpect(status().isOk())
+            // $ = root of the json body response, in this case an array
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].name").value("foo"));
 
@@ -59,11 +63,14 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"foo\"}"))
             .andExpect(status().isCreated())
+            // root returns an object {id: blah, name: blah}
             .andExpect(jsonPath("$.name").value("foo"));
     }
 
     @Test
     void createTrimsWhitespaceFromTheName() throws Exception {
+        // inv is invocation, it's InvocationOnMock
+        // for .save(product), .getArgument(0) returns product
         when(repository.save(any(Product.class))).thenAnswer(inv -> inv.getArgument(0));
         
         mockMvc.perform(post("/products")
@@ -80,6 +87,7 @@ class ProductControllerTest {
                 .content("{\"name\":\"\"}"))
             .andExpect(status().isBadRequest())
             .andExpect(content().json("[{\"field\":\"name\",\"message\":\"must not be blank\"}]"));
+        // asserts save was never called in our mock repo
         verify(repository, never()).save(any());
     }
 
@@ -111,6 +119,8 @@ class ProductControllerTest {
                 .content("{\"name\":\"foo\", \"id\":\"123e4567-e89b-12d3-a456-426614174000\"}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.name").value("foo"));
+        // argument captor records arguments that we called on our mock mvc
+        // our repo.save line above creates a captor
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
         verify(repository).save(captor.capture());
         assertThat(captor.getValue().getId()).isNull();

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice 
 public class ApiExceptionHandler {
     
+    // MethodArgumentNotValidException is thrown when the @Valid annotation fails. 
     @ExceptionHandler (MethodArgumentNotValidException.class)
     public ResponseEntity<List<FieldMessage>> handleValidation(MethodArgumentNotValidException ex) {
         List<FieldMessage> errors = new ArrayList<>();

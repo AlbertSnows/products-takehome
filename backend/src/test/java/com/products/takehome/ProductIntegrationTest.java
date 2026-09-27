@@ -15,8 +15,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasItem;
 
+// starts up our app similar to main(), including our server
 @SpringBootTest
+// wires up mockmvc, allows requests to be sent to server
 @AutoConfigureMockMvc
+// transactional ensures nothing is perisisted to the db
 @Transactional
 class ProductIntegrationTest {
 

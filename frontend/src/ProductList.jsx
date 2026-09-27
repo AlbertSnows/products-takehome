@@ -16,6 +16,7 @@ function ProductList() {
     }
   }
 
+  // Runs after the first draw when provided "[]"
   useEffect(() => {
     loadProducts();
   }, []);

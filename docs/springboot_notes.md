@@ -195,6 +195,25 @@ controller since it is automated for us.
 - [Auto-configuration](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html)
 - [Structuring Your Code](https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html)
 
+
+## @Valid
+
+Valid asks to check an object against its rules before 
+continuing. So in our case, we mark an incoming post
+request as @Valid. The type is CreateProductRequest, so we 
+ensure it's not blank and that the character size is 
+appropriate. 
+
+## @ExceptionHandler 
+
+This is used with another component, e.g. `@ExceptionHandler(someexception.class)` to call a method (handleValidation) when that exception is raised. 
+
+## Response Enity
+
+A response entity is the entire HTTP response represented
+as an object. It has status, header, and a bady. You can
+use it to configure the type of response you want to provide. 
+
 ## Gotchas
 
 ### The scan boundary
