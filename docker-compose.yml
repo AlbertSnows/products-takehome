@@ -1,5 +1,16 @@
 services: 
   db: 
+    healthcheck: 
+      # isready ships with pg
+      # CMD-SHELL runs the next string through a shell
+      # $$ is for when our config needs a literal dollar sign
+      # Our environment will have its own pg_user/db, so we want it
+      #  to refer to ${blah}
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     image: postgres:16 # 16 is a stable version
     # auto restarts if it crashes or if the daemon restarts (e.g. machine reboot)
     # stops when running `docker compose stop`
@@ -21,6 +32,35 @@ services:
       # it sets the tags on the file such that it can be read in the container if SELinux is 
       # blocking it
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:z
+  backend:
+    build:
+      # this tells compose to grab the backend docker file and build from there
+      ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      # This environment variable overrides spring.datasource.url:
+      #   - naming rule: replace dots with underscores, remove dashes, uppercase
+      #     (spring.datasource.url -> SPRING_DATASOURCE_URL)
+      #   - environment variables come after application.properties in Spring's
+      #     property source order, so they win
+      #   - service-to-service traffic uses the container port (5432), not the host port
+      # citation: https://docs.spring.io/spring-boot/reference/data/sql.html#data.sql.datasource.configuration
+      # citation: https://docs.spring.io/spring-boot/reference/features/external-config.html#features.external-config.typesafe-configuration-properties.relaxed-binding.environment-variables
+      # citation: https://docs.spring.io/spring-boot/reference/features/external-config.html
+      # citation: https://docs.docker.com/compose/how-tos/networking/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/products
+    depends_on:
+      db:
+        # waits for db's healthcheck to verify first, then starts
+        condition: service_healthy
+  frontend:
+    build:
+      ./frontend
+    ports:
+      - "3000:80"
+    
+
 
 # citation: https://docs.docker.com/engine/storage/volumes/
 # Without volumes, Postgres writes its data files inside the container's own larger filesystem layer. 
