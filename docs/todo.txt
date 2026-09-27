@@ -1,0 +1,31 @@
+setup
+- prerequisits
+- databes setup
+- starting the backend
+- starting the frontend
+- tests
+
+frontend
+- list product
+- submit cration
+
+api
+- list product
+- create product 
+
+db
+- postgres table
+-- id
+-- name
+
+stack
+- react (FE)
+- JSB (BE) 
+- Postgres db
+
+other thoughts:
+- should all be on docker 
+- security concerns?
+- make sure we have tests
+- document everything I don't know
+
