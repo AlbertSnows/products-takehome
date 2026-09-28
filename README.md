@@ -114,6 +114,6 @@ npm run test:run
 - On AI: I used Claude Code as a pair. It explained concepts with sources, reviewed my code and tests,
   helped debug, and wrote scaffolding such as empty test files and drafts of some docs. I wrote
   the application code and the tests.
-- What I would do differently: use a migration tool such as Flyway instead of a one-time init
-  script, add pagination, use a data-fetching library instead of `fetch` inside an effect, and use
-  Testcontainers so the integration test does not need the compose database.
+- What I would do differently: next I'd explore using a migration tool such as Flyway instead of a one-time init
+  script. There's also a use case here for adding pagination. I also would explore using a different testing 
+  style so that the integration test does not need the compose database.
